@@ -15,6 +15,7 @@
 #include <sstream>
 #include <map>
 #include <chrono>
+#include <tuple>
 using namespace std;
 
 #include "utilities.h"
@@ -77,7 +78,7 @@ int main(int argc, char** argv){
     // Start timing for part 2
     auto start = chrono::high_resolution_clock::now();
 
-    vector<pair<string, double>> bestMovies; // name, rating
+    vector<tuple<string, string, double>> bestMovies; // prefix, name, rating
 
     //  For each prefix,
     for (const string& prefix : prefixes) {
@@ -98,8 +99,9 @@ int main(int argc, char** argv){
             for (const auto& p : candidates) {
                 cout << p.second << ", " << fixed << setprecision(1) << p.first << endl;
             }
+            cout << endl;
             // Store the best
-            bestMovies.emplace_back(candidates[0].second, candidates[0].first);
+            bestMovies.emplace_back(prefix, candidates[0].second, candidates[0].first);
         }
     }
 
@@ -109,10 +111,8 @@ int main(int argc, char** argv){
 
     //  For each prefix,
     //  Print the highest rated movie with that prefix if it exists.
-    for (size_t i = 0; i < prefixes.size(); ++i) {
-        if (i < bestMovies.size()) {
-            cout << "Best movie with prefix " << prefixes[i] << " is: " << bestMovies[i].first << " with rating " << fixed << setprecision(1) << bestMovies[i].second << endl;
-        }
+    for (const auto& b : bestMovies) {
+        cout << "Best movie with prefix " << get<0>(b) << " is " << get<1>(b) << " with rating " << fixed << setprecision(1) << get<2>(b) << endl;
     }
 
     // For analysis, print the time if needed, but for submission, comment out
